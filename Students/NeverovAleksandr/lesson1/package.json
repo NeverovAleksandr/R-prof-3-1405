@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/NeverovAleksandr/R-prof-3-1405/issues"
   },
-  "homepage": "https://github.com/NeverovAleksandr/R-prof-3-1405#readme"
+  "homepage": "https://github.com/NeverovAleksandr/R-prof-3-1405#readme",
+  "devDependencies": {
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  }
 }
