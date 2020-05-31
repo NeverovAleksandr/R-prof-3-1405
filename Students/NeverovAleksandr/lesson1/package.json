@@ -1,0 +1,19 @@
+{
+  "name": "main_app",
+  "version": "1.0.0",
+  "description": "React.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeverovAleksandr/R-prof-3-1405.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NeverovAleksandr/R-prof-3-1405/issues"
+  },
+  "homepage": "https://github.com/NeverovAleksandr/R-prof-3-1405#readme"
+}
