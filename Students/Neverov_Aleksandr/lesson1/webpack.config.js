@@ -1,6 +1,5 @@
-/*jshint esversion: 6 */
-const path = require('path');
 
+const path = require('path');
 module.exports = {
   entry: './static_src/index.jsx',
   output: {
