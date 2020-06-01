@@ -1,8 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import PropTypes from 'prop-types';
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles(theme => ({
@@ -16,21 +18,36 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: '#3d4044',
     },
   },
+  listItemChatLink: {
+    textDecoration: 'none',
+    color: 'white',
+  },
 }));
 
-export default function CheckboxListSecondary() {
+export default function ChatList(props) {
   const classes = useStyles();
 
+  const { chats } = props;
   return (
     <List dense className={classes.root}>
-      {['Ivan Makeev', 'Антон Чепур', 'Кирилл Ткаченко', 'GeekBrains. ReactJS. Иван Макеев'].map(value => {
-        const labelId = `list-secondary-label-${value}`;
+      {chats.map((chat, index) => {
+        const labelId = `list-secondary-label-${chat.title + index}`;
         return (
-          <ListItem key={value} button className={classes.listItemChat}>
-            <ListItemText id={labelId} primary={value} />
-          </ListItem>
+          <Link key={chat.title} to={`/chat/${index}/`} className={classes.listItemChatLink}>
+            <ListItem button className={classes.listItemChat}>
+              <ListItemText id={labelId} primary={chat.title} />
+            </ListItem>
+          </Link>
         );
       })}
     </List>
   );
 }
+
+ChatList.propTypes = {
+  chats: PropTypes.array,
+};
+
+ChatList.defaultTypes = {
+  chats: [],
+};

@@ -99,3 +99,18 @@ input[type='text'] {
 .message-me .message__time {
     color: #7ba3cd;
 }
+
+.grid-container {
+    height: 100vh;
+}
+
+.chatList {
+    background-color: #182633;
+    border-right: 1px solid #0e1622;
+}
+
+.messageField {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr 36px;
+}
