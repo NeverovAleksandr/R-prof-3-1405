@@ -12,13 +12,13 @@ export default class ChatHeader extends Component {
   }
 
   render() {
-    const { title } = this.props;
+    const { chatId } = this.props;
 
     return (
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">
-            {title}
+            {chatId}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -27,6 +27,5 @@ export default class ChatHeader extends Component {
 }
 
 ChatHeader.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  title: PropTypes.string,
+  chatId: PropTypes.number.isRequired,
 };

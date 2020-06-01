@@ -61,43 +61,40 @@ input[type='text'] {
     overflow-y: auto;
 }
 
-.message {
+.grid-container {
+    height: 100vh;
+}
+
+.chatList {
     background-color: #182633;
-    padding: 10px 15px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-self: flex-start;
-    max-width: 75%;
+    border-right: 1px solid #0e1622;
 }
 
-.message + .message {
-    margin-top: 10px;
+.messageField {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr 36px;
 }
 
-.message div + div {
-    margin-top: 3px;
+.chatList {
+    width: 100%;
+    color: #e4eaf1;
 }
 
-
-.message-me {
-    align-self: flex-end;
-    background-color: #2b537a;
+.listItemChat:hover {
+    background-color: #3d4044;
+}
+.listItemChat {
+    white-space: nowrap;
 }
 
-.message__author {
-    align-self: flex-start;
-    color: #ffc760;
+.listItemChatLink {
+    text-decoration: none;
+    color: white;
 }
 
-.message__time {
-    font-size: 0.85em;
-    color: #6d7e8d;
-    align-self: flex-end;
-}
-
-.message-me .message__time {
-    color: #7ba3cd;
+.add-new-chat {
+    padding: 0 !important;
 }
 
 .grid-container {

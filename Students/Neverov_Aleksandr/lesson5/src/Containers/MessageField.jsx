@@ -1,42 +1,55 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import connect from 'react-redux/es/connect/connect';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
-import Message from './Message';
+import Message from '../Components/Message';
 import { botPhrases } from '../utils';
+import { sendMessage } from '../Actions/messageActions';
 
-export default class MessageField extends Component {
+class MessageField extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      textFieldValue: '',
+      input: '',
       overloadBot: {
         timer: null,
         tick: 0,
-        maxTick: 5,
-        text: 'Воу воу воу. Остановись! Хватит флудить',
       },
     };
 
     this.chatWindow = React.createRef();
+
+    this.handleChange.bind(this);
+    this.handleKeyUp.bind(this);
   }
 
   botSendMessage() {
     const { overloadBot } = this.state;
+    const { chatId, messages } = this.props;
     clearTimeout(overloadBot.timer);
     overloadBot.timer = setTimeout(() => {
       overloadBot.tick = 0;
-      this.props.sendMessage(botPhrases(), 'bot');
+
+      const messageId = Object.keys(messages).length + 1;
+      this.props.sendMessage(messageId, botPhrases(), 'bot', chatId);
     }, 1000);
   }
 
   handleSendMessage(text, sender) {
     if (text.length > 0) {
-      this.props.sendMessage(text, sender);
+      const {
+        chatId, messages,
+      } = this.props;
+      const messageId = Object.keys(messages).length + 1;
+
+      this.props.sendMessage(messageId, text, sender, chatId);
+
       if (sender !== 'bot') {
         this.botSendMessage();
       }
-      this.setState({ textFieldValue: '' });
+      this.setState({ input: '' });
       const chatWindow = this.chatWindow.current;
       setTimeout(() => {
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -45,13 +58,13 @@ export default class MessageField extends Component {
   }
 
   handleChange(event) {
-    this.setState({ textFieldValue: event.target.value });
+    this.setState({ input: event.target.value });
   }
 
   handleKeyUp(event) {
     if (event.keyCode === 13) {
-      const { textFieldValue } = this.state;
-      this.handleSendMessage(textFieldValue, 'me');
+      const { input } = this.state;
+      this.handleSendMessage(input, 'me');
     }
   }
 
@@ -59,8 +72,15 @@ export default class MessageField extends Component {
     const {
       chatId, chats, messages,
     } = this.props;
+    const { input } = this.state;
 
-    const messageElements = chats[chatId].messageList.map(messageId => <Message key={messages[messageId].id} message={messages[messageId]} />);
+    const messageElements = chats[chatId].messageList.map(messageId => (
+      <Message
+        key={`${messageId}${messages[messageId].text}`}
+        text={messages[messageId].text}
+        sender={messages[messageId].sender}
+      />
+    ));
 
     return (
       <>
@@ -74,9 +94,9 @@ export default class MessageField extends Component {
             type="text"
             autoFocus
             placeholder="Write a message..."
-            value={this.state.textFieldValue}
+            value={input}
           />
-          <button onClick={() => this.handleSendMessage(this.state.textFieldValue, 'me')} type="button">Отправить</button>
+          <button onClick={() => this.handleSendMessage(input, 'me')} type="button">Отправить</button>
         </div>
       </>
     );
@@ -86,6 +106,15 @@ export default class MessageField extends Component {
 MessageField.propTypes = {
   chatId: PropTypes.number.isRequired,
   chats: PropTypes.array.isRequired,
-  messages: PropTypes.array.isRequired,
+  messages: PropTypes.object,
   sendMessage: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = ({ chatReducer, messageReducer }) => ({
+  chats: chatReducer.chats,
+  messages: messageReducer.messages,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({ sendMessage }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageField);
