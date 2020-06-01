@@ -1,21 +1,23 @@
-
 const path = require('path');
+
 module.exports = {
-  entry: './static_src/index.jsx',
+  entry: {
+    app: './src/index.jsx',
+  },
   output: {
     path: path.resolve(__dirname, 'static/build'),
     filename: 'app.js',
     publicPath: 'static/build/',
   },
   resolve: {
-    modules: [path.resolve(__dirname, 'static_src'), 'node_modules'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.jsx', '.js'],
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        include: path.resolve(__dirname, 'static_src'),
+        include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         use: [
           {
@@ -24,6 +26,16 @@ module.exports = {
               presets: ['@babel/preset-env', '@babel/preset-react'],
             },
           },
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader',
         ],
       },
     ],
