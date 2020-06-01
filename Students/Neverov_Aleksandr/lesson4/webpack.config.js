@@ -4,6 +4,13 @@ module.exports = {
   entry: {
     app: './src/index.jsx',
   },
+  devtool: 'cheap-inline-module-source-map',
+  devServer: {
+    port: 8080,
+    historyApiFallback: {
+      index: 'index.html',
+    },
+  },
   output: {
     path: path.resolve(__dirname, 'static/build'),
     filename: 'app.js',
