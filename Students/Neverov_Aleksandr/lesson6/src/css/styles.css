@@ -88,6 +88,10 @@ input[type='text'] {
     white-space: nowrap;
 }
 
+.listItemChat.blink-chat {
+    background-color: #3d4044 !important;
+}
+
 .listItemChatLink {
     text-decoration: none;
     color: white;

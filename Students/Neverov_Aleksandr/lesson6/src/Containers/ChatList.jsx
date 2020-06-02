@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import {bindActionCreators} from "redux";
-import connect from "react-redux/es/connect/connect";
-import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import connect from 'react-redux/es/connect/connect';
+import { push } from 'connected-react-router';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import { addChat } from '../Actions/chatActions';
+import { addChat, deleteChat } from '../Actions/chatActions';
 
 class ChatList extends Component {
   constructor(props) {
@@ -17,9 +19,11 @@ class ChatList extends Component {
       input: '',
     };
 
-    this.handleChange.bind(this);
-    this.handleKeyUp.bind(this);
-    this.handleAddChat.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleAddChat = this.handleAddChat.bind(this);
+    this.handleNavigate = this.handleNavigate.bind(this);
+    this.handleDeleteChat = this.handleDeleteChat.bind(this);
   }
 
   handleChange(event) {
@@ -39,6 +43,14 @@ class ChatList extends Component {
     }
   }
 
+  handleNavigate(link) {
+    this.props.push(link);
+  }
+
+  handleDeleteChat(chatId) {
+    this.props.deleteChat(chatId);
+  }
+
   render() {
     const { chats } = this.props;
     return (
@@ -46,17 +58,19 @@ class ChatList extends Component {
         { chats.map((chat, index) => {
           const labelId = `list-secondary-label-${chat.title + index}`;
           return (
-            <Link key={chat.title} to={`/chat/${index}/`} className="listItemChatLink">
-              <ListItem button className="listItemChat">
-                <ListItemText id={labelId} primary={chat.title} />
-              </ListItem>
-            </Link>
+            <ListItem key={chat.title} button className={`listItemChat ${chat.unreadMessage ? 'blink-chat' : ''}`} onClick={() => this.handleNavigate(`/chat/${index}/`)}>
+              <ListItemText id={labelId} primary={chat.title} />
+
+              <IconButton aria-label="delete" onClick={() => this.handleDeleteChat(index)}>
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </ListItem>
           );
         }) }
         <ListItem
           className="add-new-chat"
           key="Add new chat"
-          onClick={this.handleAddChat.bind(this)}
+          onClick={this.handleAddChat}
           style={{ height: '60px' }}
           children={(
             <TextField
@@ -64,9 +78,9 @@ class ChatList extends Component {
               fullWidth
               name="input"
               placeholder="Добавить новый чат"
-              onChange={this.handleChange.bind(this)}
+              onChange={this.handleChange}
               value={this.state.input}
-              onKeyUp={this.handleKeyUp.bind(this)}
+              onKeyUp={this.handleKeyUp}
             />
           )}
         />
@@ -78,6 +92,8 @@ class ChatList extends Component {
 ChatList.propTypes = {
   chats: PropTypes.array,
   addChat: PropTypes.func,
+  deleteChat: PropTypes.func,
+  push: PropTypes.func,
 };
 
 ChatList.defaultTypes = {
@@ -88,6 +104,6 @@ const mapStateToProps = ({ chatReducer }) => ({
   chats: chatReducer.chats,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addChat }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addChat, deleteChat, push }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);
